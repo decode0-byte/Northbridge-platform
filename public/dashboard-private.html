@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Recruiter Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+
+    <h2>Northbridge Solutions Recruitment Dashboard</h2>
+
+    <div class="nav-links">
+
+        <a href="/">Website</a>
+
+        <a href="/logout">
+            <button>Logout</button>
+        </a>
+
+    </div>
+
+</nav>
+
+<h1>Recruiter Dashboard</h1>
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <h3>Total</h3>
+        <p id="totalCount">0</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Pending</h3>
+        <p id="pendingCount">0</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Interview</h3>
+        <p id="interviewCount">0</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Accepted</h3>
+        <p id="acceptedCount">0</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Rejected</h3>
+        <p id="rejectedCount">0</p>
+    </div>
+
+</div>
+
+<section class="chart-section">
+
+    <h2>
+        Hiring Pipeline
+    </h2>
+
+    <canvas id="statusChart"></canvas>
+
+</section>
+
+<div class="chart-container">
+
+    <canvas id="statusChart"></canvas>
+
+</div>
+
+<input
+    type="text"
+    id="searchInput"
+    placeholder="Search applicants..."
+    oninput="loadApplicants()"
+/>
+
+<select id="statusFilter" onchange="loadApplicants()">
+
+    <option value="All">All</option>
+
+    <option value="Pending">Pending</option>
+
+    <option value="Interview">Interview</option>
+
+    <option value="Accepted">Accepted</option>
+
+    <option value="Rejected">Rejected</option>
+
+</select>
+
+<select
+id="jobFilter"
+onchange="loadApplicants()"
+>
+
+    <option value="All">
+        All Jobs
+    </option>
+
+    <option value="Data Entry">
+        Data Entry
+    </option>
+
+    <option value="Administrative Assistant">
+        Administrative Assistant
+    </option>
+
+    <option value="Customer Support Representative">
+        Customer Support Representative
+    </option>
+
+    <option value="Sales Representative">
+        Sales Representative
+    </option>
+
+</select>
+
+<select
+id="sortFilter"
+onchange="loadApplicants()"
+>
+
+    <option value="newest">
+        Newest First
+    </option>
+
+    <option value="oldest">
+        Oldest First
+    </option>
+
+</select>
+
+<div id="applicantsList"></div>
+
+<script>
+let statusChart;
+
+async function loadApplicants() {
+
+    const response = await fetch("/applicants");
+
+    const applicants = await response.json();
+
+    document.getElementById("totalCount")
+    .innerText = applicants.length;
+
+document.getElementById("pendingCount")
+    .innerText =
+    applicants.filter(a =>
+        a.status === "Pending"
+    ).length;
+
+document.getElementById("interviewCount")
+    .innerText =
+    applicants.filter(a =>
+        a.status === "Interview"
+    ).length;
+
+document.getElementById("acceptedCount")
+    .innerText =
+    applicants.filter(a =>
+        a.status === "Accepted"
+    ).length;
+
+    const pending =
+    applicants.filter(a =>
+        a.status === "Pending"
+    ).length;
+
+const interview =
+    applicants.filter(a =>
+        a.status === "Interview"
+    ).length;
+
+const accepted =
+    applicants.filter(a =>
+        a.status === "Accepted"
+    ).length;
+
+const rejected =
+    applicants.filter(a =>
+        a.status === "Rejected"
+    ).length;
+
+const ctx =
+    document.getElementById("statusChart");
+
+if (statusChart) {
+    statusChart.destroy();
+}
+
+statusChart = new Chart(ctx, {
+
+    type: "pie",
+
+    data: {
+
+        labels: [
+            "Pending",
+            "Interview",
+            "Accepted",
+            "Rejected"
+        ],
+
+        datasets: [{
+
+            data: [
+                pending,
+                interview,
+                accepted,
+                rejected
+            ]
+        }]
+    }
+});
+
+document.getElementById("rejectedCount")
+    .innerText =
+    applicants.filter(a =>
+        a.status === "Rejected"
+    ).length;
+
+    const pending =
+applicants.filter(a =>
+    a.status === "Pending"
+).length;
+
+const interview =
+applicants.filter(a =>
+    a.status === "Interview"
+).length;
+
+const accepted =
+applicants.filter(a =>
+    a.status === "Accepted"
+).length;
+
+const rejected =
+applicants.filter(a =>
+    a.status === "Rejected"
+).length;
+
+const ctx =
+document.getElementById(
+    "statusChart"
+);
+
+if (statusChart) {
+
+    statusChart.destroy();
+}
+
+statusChart = new Chart(ctx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: [
+            "Pending",
+            "Interview",
+            "Accepted",
+            "Rejected"
+        ],
+
+        datasets: [{
+
+            label: "Applicants",
+
+            data: [
+                pending,
+                interview,
+                accepted,
+                rejected
+            ]
+        }]
+    }
+});
+
+    const applicantsList =
+        document.getElementById("applicantsList");
+
+    const filter =
+        document.getElementById("statusFilter").value;
+
+        const jobFilter =
+document.getElementById(
+"jobFilter"
+).value;
+
+const sortFilter =
+document.getElementById(
+"sortFilter"
+).value;
+
+    const search =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    applicantsList.innerHTML = "";
+
+    if (sortFilter === "newest") {
+
+    applicants.reverse();
+}
+    
+    applicants.forEach(applicant => {
+
+        if (
+            filter !== "All" &&
+            applicant.status !== filter
+        ) {
+            return;
+        }
+
+        if (
+    jobFilter !== "All" &&
+    applicant.job !== jobFilter
+) {
+    return;
+}
+
+        if (
+            !applicant.name.toLowerCase().includes(search) &&
+            !applicant.email.toLowerCase().includes(search) &&
+            !applicant.job.toLowerCase().includes(search)
+        ) {
+            return;
+        }
+
+        applicantsList.innerHTML += `
+
+            <div class="applicant-card">
+
+                <p><strong>Name:</strong>
+                ${applicant.name}</p>
+
+                <p><strong>Email:</strong>
+                ${applicant.email}</p>
+
+                <p><strong>Job:</strong>
+                ${applicant.job}</p>
+
+                <p><strong>Status:</strong>
+                ${applicant.status}</p>
+
+                <textarea
+class="notes-input"
+id="notes-${applicant._id}"
+placeholder="Recruiter notes..."
+>${applicant.notes || ""}</textarea>
+
+<br><br>
+
+<button onclick="
+saveNotes(
+'${applicant._id}'
+)">
+    Save Notes
+</button>
+
+<br>
+
+<input
+type="datetime-local"
+id="interview-${applicant._id}"
+value="${applicant.interviewDate || ''}"
+>
+
+<button onclick="
+scheduleInterview(
+'${applicant._id}'
+)">
+    Schedule Interview
+</button>
+
+                <a href="/uploads/${applicant.cv}"
+                target="_blank">
+                    View CV
+                    <br><br>
+
+<button onclick="
+window.location.href=
+'/applicant.html?id=${applicant._id}'
+">
+    View Applicant
+</button>
+                </a>
+
+                <br><br>
+
+                <button class="interview-btn"
+                onclick="
+                updateStatus(
+                '${applicant._id}',
+                'Interview'
+                )">
+                    Interview
+                </button>
+
+                <button class="accept-btn"
+                onclick="
+                updateStatus(
+                '${applicant._id}',
+                'Accepted'
+                )">
+                    Accept
+                </button>
+
+                <button class="reject-btn"
+                onclick="
+                updateStatus(
+                '${applicant._id}',
+                'Rejected'
+                )">
+                    Reject
+                </button>
+
+                <button onclick="
+                deleteApplicant(
+                '${applicant._id}'
+                )">
+                    Delete
+                </button>
+
+            </div>
+
+        `;
+    });
+}
+
+async function deleteApplicant(id) {
+
+    await fetch(`/applicants/${id}`, {
+        method: "DELETE"
+    });
+
+    loadApplicants();
+}
+
+async function updateStatus(id, status) {
+
+    await fetch(`/applicants/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            status: status
+        })
+    });
+
+    loadApplicants();
+}
+
+async function saveNotes(id) {
+
+    const notes =
+        document.getElementById(
+            `notes-${id}`
+        ).value;
+
+    await fetch(`/notes/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            notes: notes
+        })
+    });
+
+    loadApplicants();
+}
+
+async function scheduleInterview(id) {
+
+    const interviewDate =
+        document.getElementById(
+            `interview-${id}`
+        ).value;
+
+    await fetch(`/interview/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            interviewDate: interviewDate
+        })
+    });
+
+    loadApplicants();
+}
+
+loadApplicants();
+
+</script>
+
+</body>
+</html>

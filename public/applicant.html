@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Applicant Details
+    </title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<nav class="navbar">
+
+    <h2>
+        Northbridge Solutions
+    </h2>
+
+    <div>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+<section class="job-page">
+
+    <h1>
+        Applicant Profile
+    </h1>
+
+    <div
+    class="applicant-profile"
+    id="applicantProfile">
+
+    </div>
+
+</section>
+
+<script>
+
+async function loadApplicant() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const id = params.get("id");
+
+    const response =
+        await fetch("/applicants");
+
+    const applicants =
+        await response.json();
+
+    const applicant =
+        applicants.find(a =>
+            a._id === id
+        );
+
+    document.getElementById(
+        "applicantProfile"
+    ).innerHTML = `
+
+        <div class="applicant-card">
+
+            <h2>
+                ${applicant.name}
+            </h2>
+
+            <p>
+                <strong>Email:</strong>
+                ${applicant.email}
+            </p>
+
+            <p>
+                <strong>Job:</strong>
+                ${applicant.job}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                ${applicant.status}
+            </p>
+
+            <p>
+                <strong>Interview:</strong>
+                ${
+                    applicant.interviewDate
+                    || "Not Scheduled"
+                }
+            </p>
+
+            <p>
+                <strong>Notes:</strong>
+                ${
+                    applicant.notes
+                    || "No Notes"
+                }
+            </p>
+
+            <br>
+
+            <a href="/uploads/${applicant.cv}"
+            target="_blank">
+
+                View CV
+
+            </a>
+
+        </div>
+
+    `;
+}
+
+loadApplicant();
+
+</script>
+
+<footer class="footer">
+
+    <h3>
+        Northbridge Solutions
+    </h3>
+
+    <p>
+        Remote Administrative & Business
+        Support Solutions
+    </p>
+
+    <p class="footer-copy">
+        © 2026 Northbridge Solutions.
+        All rights reserved.
+    </p>
+
+</footer>
+
+</body>
+</html>
