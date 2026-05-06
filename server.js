@@ -479,3 +479,14 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.get("/applicant", (req, res) => {
+
+    if (!req.session.admin) {
+        return res.redirect("/admin.html");
+    }
+
+    res.sendFile(
+        __dirname + "/applicant.html"
+    );
+});
