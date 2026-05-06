@@ -117,16 +117,7 @@ const adminSchema = new mongoose.Schema({
 const Admin = mongoose.model("Admin", adminSchema);
 async function createAdmin() {
 
-    await Admin.deleteOne({
-    username: "admin"
-});
-    
-const existingAdmin =
-    await Admin.findOne({
-        username: process.env.ADMIN_USERNAME
-    });
-
-if (!existingAdmin) {
+    await Admin.deleteMany({});
 
     const hashedPassword =
         await bcrypt.hash(
@@ -135,14 +126,18 @@ if (!existingAdmin) {
         );
 
     const admin = new Admin({
-        username: process.env.ADMIN_USERNAME,
-        password: hashedPassword
+
+        username:
+            process.env.ADMIN_USERNAME,
+
+        password:
+            hashedPassword
     });
 
-        await admin.save();
+    await admin.save();
 
-        console.log("Admin created");
-    }
+    console.log("Fresh admin created");
+}
 }
 
 createAdmin();
