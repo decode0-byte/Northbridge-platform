@@ -79,6 +79,10 @@ const adminSchema = new mongoose.Schema({
 const Admin = mongoose.model("Admin", adminSchema);
 async function createAdmin() {
 
+    await Admin.deleteOne({
+    username: "admin"
+});
+    
 const existingAdmin =
     await Admin.findOne({
         username: process.env.ADMIN_USERNAME
