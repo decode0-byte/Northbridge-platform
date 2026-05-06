@@ -138,7 +138,6 @@ async function createAdmin() {
 
     console.log("Fresh admin created");
 }
-}
 
 createAdmin();
 
