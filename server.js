@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 app.use(session({
-    secret: "secretkey",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
