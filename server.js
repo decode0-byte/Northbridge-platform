@@ -7,8 +7,18 @@ const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const helmet = require("helmet");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
+cloudinary.config({
+
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+
+    api_key: process.env.CLOUDINARY_API_KEY,
+
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 app.use(helmet());
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -117,14 +127,19 @@ if (!existingAdmin) {
 
 createAdmin();
 
-const storage = multer.diskStorage({
+const storage = new CloudinaryStorage({
 
-    destination: function (req, file, cb) {
-        cb(null, "uploads/");
-    },
+    cloudinary: cloudinary,
 
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+    params: {
+
+        folder: "northbridge-cvs",
+
+        allowed_formats: [
+            "pdf",
+            "doc",
+            "docx"
+        ]
     }
 });
 
@@ -137,7 +152,7 @@ app.post("/apply", upload.single("cv"), async (req, res) => {
     const applicant = {
         name: req.body.name,
         email: req.body.email,
-        cv: req.file.filename,
+        cv: req.file.path,
         job: req.body.job
     };
 
