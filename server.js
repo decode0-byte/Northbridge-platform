@@ -470,7 +470,7 @@ app.get("/dashboard", (req, res) => {
     }
 
     res.sendFile(
-        __dirname + "/public/dashboard-private.html"
+        __dirname + "/dashboard-private.html"
     );
 });
 

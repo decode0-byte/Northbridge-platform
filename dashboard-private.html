@@ -12,6 +12,19 @@
 </head>
 <body>
 
+<script>
+
+fetch("/applicants")
+.then(res => {
+
+    if (res.status === 401) {
+
+        window.location.href = "/admin.html";
+    }
+});
+
+</script>
+
 <nav class="navbar">
 
     <h2>Northbridge Solutions Recruitment Dashboard</h2>
