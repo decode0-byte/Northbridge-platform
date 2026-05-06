@@ -41,6 +41,7 @@
     "gopd": "^1.2.0",
     "has-symbols": "^1.1.0",
     "hasown": "^2.0.3",
+    "helmet": "^8.1.0",
     "http-errors": "^2.0.1",
     "iconv-lite": "^0.7.2",
     "inherits": "^2.0.4",

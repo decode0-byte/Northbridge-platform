@@ -6,8 +6,10 @@ const path = require("path");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const helmet = require("helmet");
 
 const app = express();
+app.use(helmet());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
