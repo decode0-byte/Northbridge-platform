@@ -38,6 +38,15 @@ pass: process.env.EMAIL_PASS
     }
 });
 
+function isAdmin(req, res, next) {
+
+    if (!req.session.admin) {
+        return res.status(401).send("Unauthorized");
+    }
+
+    next();
+}
+
 const applicantSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -235,21 +244,21 @@ html: `
     res.send("Application received!");
 });
 
-app.get("/applicants", async (req, res) => {
+app.get("/applicants", isAdmin, async (req, res) => {
 
     const applicants = await Applicant.find();
 
     res.json(applicants);
 });
 
-app.delete("/applicants/:id", async (req, res) => {
+app.delete("/applicants/:id", isAdmin, async (req, res) => {
 
     await Applicant.findByIdAndDelete(req.params.id);
 
     res.send("Applicant deleted");
 });
 
-app.put("/applicants/:id", async (req, res) => {
+app.put("/applicants/:id", isAdmin, async (req, res) => {
 
     const applicant =
         await Applicant.findByIdAndUpdate(
@@ -344,7 +353,7 @@ app.put("/applicants/:id", async (req, res) => {
     res.send("Status updated");
 });
 
-app.put("/notes/:id", async (req, res) => {
+app.put("/notes/:id", isAdmin, async (req, res) => {
 
     await Applicant.findByIdAndUpdate(
 
@@ -358,7 +367,7 @@ app.put("/notes/:id", async (req, res) => {
     res.send("Notes saved");
 });
 
-app.put("/interview/:id", async (req, res) => {
+app.put("/interview/:id", isAdmin, async (req, res) => {
 
     const applicant =
         await Applicant.findByIdAndUpdate(
