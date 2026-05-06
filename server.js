@@ -9,6 +9,7 @@ const nodemailer = require("nodemailer");
 const helmet = require("helmet");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 cloudinary.config({
@@ -20,6 +21,25 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 app.use(helmet());
+const loginLimiter = rateLimit({
+
+    windowMs: 15 * 60 * 1000,
+
+    max: 5,
+
+    message:
+        "Too many login attempts. Try again later."
+});
+
+const applyLimiter = rateLimit({
+
+    windowMs: 15 * 60 * 1000,
+
+    max: 10,
+
+    message:
+        "Too many applications submitted. Try again later."
+});
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -147,7 +167,7 @@ const upload = multer({
     storage: storage
 });
 
-app.post("/apply", upload.single("cv"), async (req, res) => {
+app.post("/apply", applyLimiter, upload.single("cv"), async (req, res) => {
 
     const applicant = {
         name: req.body.name,
@@ -451,7 +471,7 @@ app.put("/interview/:id", isAdmin, async (req, res) => {
     res.send("Interview scheduled");
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", loginLimiter, async (req, res) => {
 
     const { username, password } = req.body;
 
