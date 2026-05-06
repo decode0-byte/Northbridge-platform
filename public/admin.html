@@ -96,14 +96,20 @@ async function login(event) {
         })
     });
 
-    const message = await response.text();
+const message = await response.text();
+
+console.log(message);
+
+if (
+    message.includes("Login successful")
+) {
+
+    window.location.href = "/dashboard";
+
+} else {
 
     alert(message);
-
-    if (message === "Login successful") {
-
-       window.location.href = "/dashboard";
-    }
+}
 }
 
 </script>
