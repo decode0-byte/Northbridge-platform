@@ -40,14 +40,21 @@ const applyLimiter = rateLimit({
     message:
         "Too many applications submitted. Try again later."
 });
+
 app.use(session({
+
     secret: process.env.SESSION_SECRET,
+
     resave: false,
+
     saveUninitialized: false,
 
     cookie: {
+
         secure: true,
+
         httpOnly: true,
+
         sameSite: "lax"
     }
 }));
