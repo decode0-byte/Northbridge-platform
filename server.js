@@ -79,20 +79,23 @@ const adminSchema = new mongoose.Schema({
 const Admin = mongoose.model("Admin", adminSchema);
 async function createAdmin() {
 
-    const existingAdmin =
-        await Admin.findOne({
-            username: "admin"
-        });
+const existingAdmin =
+    await Admin.findOne({
+        username: process.env.ADMIN_USERNAME
+    });
 
-    if (!existingAdmin) {
+if (!existingAdmin) {
 
-        const hashedPassword =
-            await bcrypt.hash("admin123", 10);
+    const hashedPassword =
+        await bcrypt.hash(
+            process.env.ADMIN_PASSWORD,
+            10
+        );
 
-        const admin = new Admin({
-            username: "admin",
-            password: hashedPassword
-        });
+    const admin = new Admin({
+        username: process.env.ADMIN_USERNAME,
+        password: hashedPassword
+    });
 
         await admin.save();
 
