@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
@@ -10,6 +9,22 @@ const helmet = require("helmet");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const rateLimit = require("express-rate-limit");
+require("dotenv").config();
+
+const transporter =
+nodemailer.createTransport({
+
+    service: "gmail",
+
+    auth: {
+
+        user:
+        process.env.EMAIL_USER,
+
+        pass:
+        process.env.EMAIL_PASS
+    }
+});
 
 const app = express();
 cloudinary.config({
@@ -20,7 +35,54 @@ cloudinary.config({
 
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
-app.use(helmet());
+
+app.use(
+    helmet({
+
+        contentSecurityPolicy: {
+
+            directives: {
+
+                defaultSrc: ["'self'"],
+
+                scriptSrc: [
+
+                    "'self'",
+
+                    "'unsafe-inline'",
+
+                    "https://cdn.jsdelivr.net"
+                ],
+
+                styleSrc: [
+
+                    "'self'",
+
+                    "'unsafe-inline'",
+
+                    "https://cdnjs.cloudflare.com"
+                ],
+
+                fontSrc: [
+
+                    "'self'",
+
+                    "https://cdnjs.cloudflare.com"
+                ],
+
+                imgSrc: [
+
+                    "'self'",
+
+                    "data:",
+
+                    "https://images.unsplash.com"
+                ]
+            }
+        }
+    })
+);
+
 const loginLimiter = rateLimit({
 
     windowMs: 15 * 60 * 1000,
@@ -72,17 +134,6 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch((err) => console.log(err));
 
-const transporter = nodemailer.createTransport({
-
-    service: "gmail",
-
-    auth: {
-
-user: process.env.EMAIL_USER,
-pass: process.env.EMAIL_PASS
-    }
-});
-
 function isAdmin(req, res, next) {
 
     if (!req.session.admin) {
@@ -124,7 +175,18 @@ const adminSchema = new mongoose.Schema({
 const Admin = mongoose.model("Admin", adminSchema);
 async function createAdmin() {
 
-    await Admin.deleteMany({});
+    const existingAdmin =
+        await Admin.findOne({
+            username:
+            process.env.ADMIN_USERNAME
+        });
+
+    if (existingAdmin) {
+
+        console.log("Admin already exists");
+
+        return;
+    }
 
     const hashedPassword =
         await bcrypt.hash(
@@ -148,19 +210,19 @@ async function createAdmin() {
 
 createAdmin();
 
-const storage = new CloudinaryStorage({
+const storage = multer.diskStorage({
 
-    cloudinary: cloudinary,
+    destination: function(req, file, cb) {
 
-    params: {
+        cb(null, "uploads/");
+    },
 
-        folder: "northbridge-cvs",
+    filename: function(req, file, cb) {
 
-        allowed_formats: [
-            "pdf",
-            "doc",
-            "docx"
-        ]
+        cb(
+            null,
+            Date.now() + "-" + file.originalname
+        );
     }
 });
 
@@ -168,85 +230,48 @@ const upload = multer({
     storage: storage
 });
 
-app.post("/apply", applyLimiter, upload.single("cv"), async (req, res) => {
+app.post(
+    "/apply",
+    applyLimiter,
+    upload.single("cv"),
+    async (req, res) => {
 
-    const applicant = {
-        name: req.body.name,
-        email: req.body.email,
-        cv: req.file.path,
-        job: req.body.job
-    };
+        try {
 
-    const newApplicant = new Applicant(applicant);
+            const applicant =
+                new Applicant({
 
-    await newApplicant.save();
+                    name: req.body.name,
+
+                    email: req.body.email,
+
+                    job: req.body.job,
+
+                    cv: req.file.path,
+
+                    status: "Pending"
+                });
+
+            await applicant.save();
+
+            try {
 
     await transporter.sendMail({
 
-    from: "keenes656@gmail.com",
+        from:
+        process.env.EMAIL_USER,
 
-    to: req.body.email,
+        to:
+        process.env.EMAIL_USER,
 
-    subject: "Application Received",
+        subject:
+        "New Job Application",
 
-html: `
+        html: `
 
-<div style="
-    font-family: Arial;
-    max-width: 600px;
-    margin: auto;
-    padding: 30px;
-    background: #f4f4f4;
-">
-
-    <div style="
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-    ">
-
-        <h1 style="
-            color: #222;
-            text-align: center;
-        ">
-            Northbridge Solutions
-        </h1>
-
-        <hr>
-
-        <h2>
-            Application Received
-        </h2>
-
-        <p>
-            Hello ${req.body.name},
-        </p>
-
-        <p>
-            Thank you for applying for the
-            <strong>${req.body.job}</strong>
-            position at Blink Careers.
-        </p>
-
-        <p>
-            Our recruitment team has successfully
-            received your application and CV.
-        </p>
-
-        <p>
-            Your application is currently under review.
-            If shortlisted, you will be contacted
-            for the next stage of the hiring process.
-        </p>
-
-        <div style="
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        ">
-
-            <h3>Application Details</h3>
+            <h2>
+                New Applicant
+            </h2>
 
             <p>
                 <strong>Name:</strong>
@@ -259,41 +284,32 @@ html: `
             </p>
 
             <p>
-                <strong>Position:</strong>
+                <strong>Job:</strong>
                 ${req.body.job}
             </p>
 
-            <p>
-                <strong>Status:</strong>
-                Pending Review
-            </p>
+        `
+    });
 
-        </div>
+} catch (emailError) {
 
-        <p style="
-            margin-top: 30px;
-        ">
-            We appreciate your interest in joining
-            Northbridge Solutions and wish you success
-            throughout the recruitment process.
-        </p>
+    console.log(emailError);
+}
 
-        <p>
-            Best regards,
-            <br>
-            Northbridge Solutions Recruitment Team
-        </p>
+            res.send(
+                "Application received"
+            );
 
-    </div>
+        } catch (error) {
 
-</div>
+            console.log(error);
 
-`
-
-});
-
-    res.send("Application received!");
-});
+            res.status(500).send(
+                error.message
+            );
+        }
+    }
+);
 
 app.get("/applicants", isAdmin, async (req, res) => {
 
@@ -445,26 +461,44 @@ app.put("/interview/:id", isAdmin, async (req, res) => {
 
         html: `
 
-        <h1>Northbridge Solutions</h1>
+        <div style="
+            font-family: Arial;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background: #f4f4f4;
+        ">
 
-        <p>
-            Hello ${applicant.name},
-        </p>
+            <div style="
+                background: white;
+                padding: 40px;
+                border-radius: 15px;
+            ">
 
-        <p>
-            Your interview for the
-            <strong>${applicant.job}</strong>
-            role has been scheduled.
-        </p>
+                <h1>Northbridge Solutions</h1>
 
-        <h2>
-            ${applicant.interviewDate}
-        </h2>
+                <p>
+                    Hello ${applicant.name},
+                </p>
 
-        <p>
-            Please be available at the
-            scheduled time.
-        </p>
+                <p>
+                    Your interview for the
+                    <strong>${applicant.job}</strong>
+                    role has been scheduled.
+                </p>
+
+                <h2>
+                    ${applicant.interviewDate}
+                </h2>
+
+                <p>
+                    Please be available at the
+                    scheduled time.
+                </p>
+
+            </div>
+
+        </div>
 
         `
     });
@@ -472,31 +506,47 @@ app.put("/interview/:id", isAdmin, async (req, res) => {
     res.send("Interview scheduled");
 });
 
-app.post("/login", loginLimiter, async (req, res) => {
+app.post("/login", async (req, res) => {
 
-    const { username, password } = req.body;
+    try {
 
-    const admin = await Admin.findOne({
-        username: username
-    });
+        const { username, password } = req.body;
 
-    if (!admin) {
-        return res.send("Admin not found");
-    }
+        const admin = await Admin.findOne({ username });
 
-    const validPassword =
-        await bcrypt.compare(
+        if (!admin) {
+
+            return res.status(401).json({
+                message: "Invalid username"
+            });
+        }
+
+        const validPassword = await bcrypt.compare(
             password,
             admin.password
         );
 
-    if (!validPassword) {
-        return res.send("Wrong password");
+        if (!validPassword) {
+
+            return res.status(401).json({
+                message: "Invalid password"
+            });
+        }
+
+        req.session.admin = admin._id;
+
+        res.json({
+            message: "Login successful"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Server error"
+        });
     }
-
-    req.session.admin = admin;
-
-    res.send("Login successful");
 });
 
 app.get("/", (req, res) => {

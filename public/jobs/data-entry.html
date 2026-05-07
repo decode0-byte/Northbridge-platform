@@ -8,7 +8,7 @@
         Data Entry Specialist
     </title>
 
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/style.css">
 
 </head>
 <body>
@@ -17,15 +17,23 @@
 
     <div class="logo">
 
-        <div class="logo-box">
-            NB
-        </div>
+<img
+    src="/images/logo.png"
+    alt="Northbridge Solutions Logo"
+    class="logo-image"
+/>
 
-        <h2>
-            Northbridge Solutions
-        </h2>
+<div class="logo-text">
 
-    </div>
+    <h2>
+        Northbridge
+    </h2>
+
+    <span>
+        SOLUTIONS
+    </span>
+
+</div>
 
     <div class="nav-links">
 
@@ -63,13 +71,7 @@
 
         </p>
 
-        <button onclick="
-        document.getElementById(
-        'applySection'
-        ).scrollIntoView({
-            behavior: 'smooth'
-        })
-        ">
+<button id="applyBtn">
             Apply Now
         </button>
 
@@ -146,7 +148,7 @@ class="apply-section"
         Apply for this Position
     </h2>
 
-    <form onsubmit="handleSubmit(event)">
+    <form id="applicationForm">
 
         <input
         type="text"
@@ -163,6 +165,7 @@ class="apply-section"
         <input
         type="file"
         id="cv"
+        name="cv"
         required>
 
         <button type="submit">
@@ -200,5 +203,8 @@ class="apply-section"
     </p>
 
 </footer>
+
+<script src="/script.js"></script>
+
 </body>
 </html>

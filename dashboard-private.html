@@ -81,11 +81,6 @@ fetch("/applicants")
 
 </section>
 
-<div class="chart-container">
-
-    <canvas id="statusChart"></canvas>
-
-</div>
 
 <input
     type="text"
@@ -223,69 +218,6 @@ statusChart = new Chart(ctx, {
         ],
 
         datasets: [{
-
-            data: [
-                pending,
-                interview,
-                accepted,
-                rejected
-            ]
-        }]
-    }
-});
-
-document.getElementById("rejectedCount")
-    .innerText =
-    applicants.filter(a =>
-        a.status === "Rejected"
-    ).length;
-
-    const pending =
-applicants.filter(a =>
-    a.status === "Pending"
-).length;
-
-const interview =
-applicants.filter(a =>
-    a.status === "Interview"
-).length;
-
-const accepted =
-applicants.filter(a =>
-    a.status === "Accepted"
-).length;
-
-const rejected =
-applicants.filter(a =>
-    a.status === "Rejected"
-).length;
-
-const ctx =
-document.getElementById(
-    "statusChart"
-);
-
-if (statusChart) {
-
-    statusChart.destroy();
-}
-
-statusChart = new Chart(ctx, {
-
-    type: "bar",
-
-    data: {
-
-        labels: [
-            "Pending",
-            "Interview",
-            "Accepted",
-            "Rejected"
-        ],
-
-        datasets: [{
-
-            label: "Applicants",
 
             data: [
                 pending,

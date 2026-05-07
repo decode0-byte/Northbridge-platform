@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
+
     <title>Job Platform</title>
+
     <link rel="stylesheet" href="style.css">
+
     <link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
 </head>
+
 <body>
-   <nav class="navbar">
+
+<nav class="navbar">
 
     <div class="logo">
 
-       <img
-src="/images/logo.png"
-alt="Northbridge Solutions Logo"
-class="logo-image"
-/>
+        <img
+            src="/images/logo.png"
+            alt="Northbridge Solutions Logo"
+            class="logo-image"
+        />
 
-       <div class="logo-text">
+        <div class="logo-text">
 
-    <h2>
-        Northbridge
-    </h2>
+            <h2>
+                Northbridge
+            </h2>
 
-    <span>
-        SOLUTIONS
-    </span>
+            <span>
+                SOLUTIONS
+            </span>
 
-</div>
+        </div>
 
     </div>
 
@@ -45,18 +52,16 @@ class="logo-image"
     </div>
 
 </nav>
+
 <section class="hero-modern">
 
-```html id="hero001"
-<div class="hero-image left-image">
+    <div class="hero-image left-image">
 
-    <img
+        <img
         src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80"
-        alt="Remote Worker"
-        style="width:100%; border-radius:12px;"
-    >
+        alt="Office Team">
 
-</div>
+    </div>
 
     <div class="hero-center">
 
@@ -85,22 +90,16 @@ class="logo-image"
 
         </p>
 
-        <button onclick="
-        document.getElementById(
-        'jobs'
-        ).scrollIntoView({
-            behavior: 'smooth'
-        })
-        ">
-            Explore Careers
-        </button>
+<button id="exploreBtn">
+    Explore Careers
+</button>
 
     </div>
 
     <div class="hero-image right-image">
 
         <img
-        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d"
+        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80"
         alt="Warehouse Worker">
 
     </div>
@@ -182,29 +181,17 @@ class="logo-image"
 
     <div class="brands-grid">
 
-        <div class="brand">
-            Shopify
-        </div>
+        <div class="brand">Shopify</div>
 
-        <div class="brand">
-            Amazon
-        </div>
+        <div class="brand">Amazon</div>
 
-        <div class="brand">
-            Stripe
-        </div>
+        <div class="brand">Stripe</div>
 
-        <div class="brand">
-            FedEx
-        </div>
+        <div class="brand">FedEx</div>
 
-        <div class="brand">
-            DHL
-        </div>
+        <div class="brand">DHL</div>
 
-        <div class="brand">
-            WooCommerce
-        </div>
+        <div class="brand">WooCommerce</div>
 
     </div>
 
@@ -233,7 +220,6 @@ class="logo-image"
         <div class="benefit-card">
 
             <i class="fas fa-laptop-house benefit-icon"></i>
-
 
             <h3>
                 Remote Flexibility
@@ -264,7 +250,7 @@ class="logo-image"
         </div>
 
         <div class="benefit-card">
-            
+
             <i class="fas fa-users benefit-icon"></i>
 
             <h3>
@@ -432,7 +418,6 @@ class="logo-image"
 
         <div class="testimonial-card">
 
-            
             <i class="fas fa-quote-left quote-icon"></i>
 
             <p>
@@ -525,172 +510,241 @@ class="logo-image"
     </div>
 
 </section>
+
 <section class="about">
 
-    <h2>About Northbridge Solutions</h2>
+    <h2>
+        About Northbridge Solutions
+    </h2>
 
-   <p>
-    Northbridge Solutions is a modern
-    workforce operations company focused
-    on providing reliable remote administrative,
-    data entry, and business support services.
-</p>
+    <p>
+        Northbridge Solutions is a modern
+        workforce operations company focused
+        on providing reliable remote administrative,
+        data entry, and business support services.
+    </p>
 
-<p>
-    We connect talented professionals with
-    flexible remote career opportunities while
-    helping businesses operate efficiently
-    through dependable administrative support.
-</p>
+    <p>
+        We connect talented professionals with
+        flexible remote career opportunities while
+        helping businesses operate efficiently
+        through dependable administrative support.
+    </p>
 
 </section>
+
 <section class="benefits">
 
-    <h2>Why Work With Us</h2>
+    <h2>
+        Why Work With Us
+    </h2>
 
     <div class="benefit-grid">
 
         <div class="benefit-card">
-            <h3>Remote Flexibility</h3>
+
+            <h3>
+                Remote Flexibility
+            </h3>
+
             <p>
                 Work from anywhere with flexible
                 schedules and remote opportunities.
             </p>
+
         </div>
 
         <div class="benefit-card">
-            <h3>Career Growth</h3>
+
+            <h3>
+                Career Growth
+            </h3>
+
             <p>
                 Build valuable experience with
                 fast-growing companies.
             </p>
+
         </div>
 
         <div class="benefit-card">
-            <h3>Supportive Team</h3>
+
+            <h3>
+                Supportive Team
+            </h3>
+
             <p>
                 Join a collaborative environment
                 focused on long-term success.
             </p>
+
         </div>
 
     </div>
 
 </section>
 
-    <section id="jobs"></section>
+<section id="jobs">
 
     <h1 class="section-title">
-    Open Positions
-</h1>
+        Open Positions
+    </h1>
 
-    <div class="jobs-grid"></div>
+    <div class="jobs-grid">
 
-    <div class="job">
+        <div class="job">
 
-    <h2>
-        Sales Representative
-        (Work From Home)
-    </h2>
+            <h2>
+                Sales Representative
+                (Work From Home)
+            </h2>
 
-    <p>
-        Connect with clients remotely and
-        help drive business growth through
-        professional sales communication.
-    </p>
+            <p>
+                Connect with clients remotely and
+                help drive business growth through
+                professional sales communication.
+            </p>
 
-    <button onclick="
-    window.location.href=
-    '/jobs/sales-representative.html'
-    ">
-        View Job
-    </button>
-
-</div>
-
-<div class="job">
-    <h2>Data Entry (Work From Home)</h2>
-    <p>Input and manage company data remotely.</p>
-
-<button onclick="
-window.location.href=
-'/jobs/data-entry.html'
-">
+            <button
+class="jobBtn"
+data-link="/jobs/sales-representative.html"
+>
     View Job
 </button>
-</div>
 
-<div class="job">
+        </div>
 
-    <h2>
-        Administrative Assistant (Work From Home)
-    </h2>
+        <div class="job">
 
-    <p>
-        Manage schedules, reports, and office
-        operations remotely.
-    </p>
+            <h2>
+                Data Entry (Work From Home)
+            </h2>
 
-    <button onclick="
-    window.location.href=
-    '/jobs/admin-assistant.html'
-    ">
-        View Job
-    </button>
+            <p>
+                Input and manage company data remotely.
+            </p>
 
-</div>
-
-<div class="job">
-
-    <h2>
-        Customer Support Representative
-        (Work From Home)
-    </h2>
-
-    <p>
-        Assist customers remotely while
-        delivering professional support
-        and communication services.
-    </p>
-
-    <button onclick="
-    window.location.href=
-    '/jobs/customer-support.html'
-    ">
-        View Job
-    </button>
-
-</div>
-
-<div class="job">
-    <h2>Payroll Officer (Work From Home)</h2>
-    <p>Handle employee payment records and payroll processing.</p>
-
-   <button onclick="
-window.location.href=
-'/jobs/payroll-officer.html'
-">
+<button
+class="jobBtn"
+data-link="/jobs/data-entry.html"
+>
     View Job
 </button>
-</div>
 
-    <div id="formContainer" class="hidden">
-        <p id="selectedJob"></p>
-    <h2>Apply for Job</h2>
+        </div>
+
+        <div class="job">
+
+            <h2>
+                Administrative Assistant
+                (Work From Home)
+            </h2>
+
+            <p>
+                Manage schedules, reports, and office
+                operations remotely.
+            </p>
+
+<button
+class="jobBtn"
+data-link="/jobs/admin-assistant.html"
+>
+    View Job
+</button>
+
+        </div>
+
+        <div class="job">
+
+            <h2>
+                Customer Support Representative
+                (Work From Home)
+            </h2>
+
+            <p>
+                Assist customers remotely while
+                delivering professional support
+                and communication services.
+            </p>
+
+<button
+class="jobBtn"
+data-link="/jobs/customer-support.html"
+>
+    View Job
+</button>
+
+        </div>
+
+        <div class="job">
+
+            <h2>
+                Payroll Officer (Work From Home)
+            </h2>
+
+            <p>
+                Handle employee payment records
+                and payroll processing.
+            </p>
+
+<button
+class="jobBtn"
+data-link="/jobs/payroll-officer.html"
+>
+    View Job
+</button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<div id="formContainer" class="hidden">
+
+    <p id="selectedJob"></p>
+
+    <h2>
+        Apply for Job
+    </h2>
 
     <form onsubmit="handleSubmit(event)">
-           <input type="text" id="name" placeholder="Your Name" required><br><br>
 
-<input type="email" id="email" placeholder="Your Email" required><br><br>
+        <input
+            type="text"
+            id="name"
+            placeholder="Your Name"
+            required
+        >
 
-<input type="file" id="cv" name="cv" required><br><br>
+        <br><br>
 
-            <button type="submit">Submit Application</button>
-        </form>
-    </div>
-    </div>
+        <input
+            type="email"
+            id="email"
+            placeholder="Your Email"
+            required
+        >
 
-</script>
+        <br><br>
+
+        <input
+            type="file"
+            id="cv"
+            name="cv"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Submit Application
+        </button>
+
+    </form>
+
+</div>
+
 <footer class="footer">
 
     <div class="footer-grid">
@@ -698,9 +752,9 @@ window.location.href=
         <div class="footer-brand">
 
             <img
-            src="/images/logo.png"
-            alt="Logo"
-            class="footer-logo"
+                src="/images/logo.png"
+                alt="Logo"
+                class="footer-logo"
             >
 
             <p>
@@ -780,5 +834,6 @@ window.location.href=
     </div>
 
 </footer>
+<script src="/script.js"></script>
 </body>
 </html>

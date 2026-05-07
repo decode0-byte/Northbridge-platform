@@ -119,28 +119,30 @@ document
             },
 
             body: JSON.stringify({
-                username: username,
-                password: password
+                username,
+                password
             })
         });
 
-        const message = await response.text();
+        const data = await response.json();
 
-        alert(message);
+        alert(data.message);
 
-        if (message.includes("Login successful")) {
+        if (response.ok) {
 
             window.location.href = "/dashboard";
         }
 
     } catch (error) {
 
+        console.log(error);
+
         alert("Login failed");
     }
+
 });
 
 </script>
-
 </body>
 
 </html>
