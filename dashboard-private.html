@@ -83,11 +83,15 @@ fetch("/applicants")
 
 
 <input
-    type="text"
-    id="searchInput"
-    placeholder="Search applicants..."
-    oninput="loadApplicants()"
+type="text"
+id="searchInput"
+placeholder="Search applicants..."
+oninput="loadApplicants()"
 />
+
+<button id="searchBtn">
+    Search
+</button>
 
 <select id="statusFilter" onchange="loadApplicants()">
 
@@ -340,14 +344,12 @@ window.location.href=
 
                 <br><br>
 
-                <button class="interview-btn"
-                onclick="
-                updateStatus(
-                '${applicant._id}',
-                'Interview'
-                )">
-                    Interview
-                </button>
+<button
+class="interview-btn"
+data-id="${applicant._id}"
+>
+    Interview
+</button>
 
                 <button class="accept-btn"
                 onclick="
@@ -367,12 +369,12 @@ window.location.href=
                     Reject
                 </button>
 
-                <button onclick="
-                deleteApplicant(
-                '${applicant._id}'
-                )">
-                    Delete
-                </button>
+<button
+class="delete-btn"
+data-id="${applicant._id}"
+>
+    Delete
+</button>
 
             </div>
 

@@ -86,3 +86,51 @@ if (form) {
         }
     );
 }
+
+document.getElementById("searchBtn")
+?.addEventListener("click", () => {
+
+    const value =
+    document.getElementById(
+        "searchInput"
+    ).value.toLowerCase();
+
+    const applicants =
+    document.querySelectorAll(
+        ".applicant-card"
+    );
+
+    applicants.forEach(card => {
+
+        const text =
+        card.innerText.toLowerCase();
+
+        if (text.includes(value)) {
+
+            card.style.display =
+            "block";
+
+        } else {
+
+            card.style.display =
+            "none";
+        }
+    });
+});
+
+document.querySelectorAll(".delete-btn")
+.forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+        const id =
+        button.dataset.id;
+
+        await fetch(`/delete/${id}`, {
+
+            method: "DELETE"
+        });
+
+        location.reload();
+    });
+});
