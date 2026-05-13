@@ -118,19 +118,34 @@ document.getElementById("searchBtn")
     });
 });
 
-document.querySelectorAll(".delete-btn")
-.forEach(button => {
+document.addEventListener(
+    "click",
+    async (event) => {
 
-    button.addEventListener("click", async () => {
+        if (
+            event.target.classList.contains(
+                "delete-btn"
+            )
+        ) {
 
-        const id =
-        button.dataset.id;
+            const id =
+            event.target.dataset.id;
 
-        await fetch(`/delete/${id}`, {
+            try {
 
-            method: "DELETE"
-        });
+                await fetch(
+                    `/delete/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
 
-        location.reload();
-    });
-});
+                location.reload();
+
+            } catch (error) {
+
+                console.log(error);
+            }
+        }
+    }
+);

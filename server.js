@@ -264,6 +264,8 @@ app.post(
 
             await applicant.save();
 
+            res.send("Application received");
+
             try {
 
     await transporter.sendMail({
