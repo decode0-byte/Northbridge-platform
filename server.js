@@ -496,9 +496,11 @@ const applicant =
         }
     );
 
+    try {
+
     await transporter.sendMail({
 
-        from: "keenes656@gmail.com",
+        from: process.env.EMAIL_USER,
 
         to: applicant.email,
 
@@ -548,7 +550,23 @@ const applicant =
         `
     });
 
-    res.send("Interview scheduled");
+    console.log(
+        "Interview email sent"
+    );
+
+    res.send(
+        "Interview scheduled"
+    );
+
+} catch (error) {
+
+    console.log(error);
+
+    res.status(500).send(
+        "Email failed"
+    );
+}
+
 });
 
 app.post("/login", async (req, res) => {
