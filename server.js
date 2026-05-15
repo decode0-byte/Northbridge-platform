@@ -79,11 +79,24 @@ app.use(
 
                     "data:",
 
-                    "https://images.unsplash.com"
+                    "https://images.unsplash.com",
+                    "https:"
+                ],
+
+                connectSrc: [
+
+                    "'self'"
                 ]
             }
         }
     })
+);
+
+app.use(express.static("public"));
+
+app.use(
+    "/uploads",
+    express.static("uploads")
 );
 
 const loginLimiter = rateLimit({
@@ -116,7 +129,10 @@ app.use(session({
 
     cookie: {
 
-       secure: false,
+        secure:
+        process.env.NODE_ENV ===
+        "production",
+
 
         httpOnly: true,
 
@@ -147,25 +163,34 @@ function isAdmin(req, res, next) {
 }
 
 const applicantSchema = new mongoose.Schema({
+
     name: String,
+
     email: String,
+
+    phone: String,
+
     cv: String,
+
     job: String,
 
     status: {
+
         type: String,
         default: "Pending"
     },
 
-     notes: {
-    type: String,
-    default: ""
-},
+    notes: {
 
-interviewDate: {
-    type: String,
-    default: ""
-}
+        type: String,
+        default: ""
+    },
+
+    interviewDate: {
+
+        type: String,
+        default: ""
+    }
 
 });
 
@@ -255,6 +280,8 @@ app.post(
 
                     email: req.body.email,
 
+                    phone: req.body.phone,
+
                     job: req.body.job,
 
                     cv: req.file.path,
@@ -263,8 +290,6 @@ app.post(
                 });
 
             await applicant.save();
-
-            res.send("Application received");
 
             try {
 
@@ -294,6 +319,12 @@ app.post(
                 <strong>Email:</strong>
                 ${req.body.email}
             </p>
+
+            <p>
+                 <strong>Phone:</strong>
+                 ${req.body.phone}
+            </p>
+            
 
             <p>
                 <strong>Job:</strong>

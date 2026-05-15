@@ -45,6 +45,9 @@ if (form) {
             const email =
                 document.getElementById("email").value;
 
+            const phone =
+                document.getElementById("phone").value;
+
             const cv =
                 document.getElementById("cv").files[0];
 
@@ -57,6 +60,8 @@ if (form) {
             formData.append("name", name);
 
             formData.append("email", email);
+
+            formData.append("phone", phone);
 
             formData.append("cv", cv);
 

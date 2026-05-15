@@ -86,14 +86,13 @@ fetch("/applicants")
 type="text"
 id="searchInput"
 placeholder="Search applicants..."
-oninput="loadApplicants()"
 />
 
 <button id="searchBtn">
     Search
 </button>
 
-<select id="statusFilter" onchange="loadApplicants()">
+<select id="statusFilter">
 
     <option value="All">All</option>
 
@@ -107,10 +106,7 @@ oninput="loadApplicants()"
 
 </select>
 
-<select
-id="jobFilter"
-onchange="loadApplicants()"
->
+<select id="jobFilter">
 
     <option value="All">
         All Jobs
@@ -134,10 +130,7 @@ onchange="loadApplicants()"
 
 </select>
 
-<select
-id="sortFilter"
-onchange="loadApplicants()"
->
+<select id="sortFilter">
 
     <option value="newest">
         Newest First
@@ -152,6 +145,7 @@ onchange="loadApplicants()"
 <div id="applicantsList"></div>
 
 <script>
+
 let statusChart;
 
 async function loadApplicants() {
@@ -163,22 +157,28 @@ async function loadApplicants() {
     document.getElementById("totalCount")
     .innerText = applicants.length;
 
-document.getElementById("pendingCount")
+    document.getElementById("pendingCount")
     .innerText =
     applicants.filter(a =>
         a.status === "Pending"
     ).length;
 
-document.getElementById("interviewCount")
+    document.getElementById("interviewCount")
     .innerText =
     applicants.filter(a =>
         a.status === "Interview"
     ).length;
 
-document.getElementById("acceptedCount")
+    document.getElementById("acceptedCount")
     .innerText =
     applicants.filter(a =>
         a.status === "Accepted"
+    ).length;
+
+    document.getElementById("rejectedCount")
+    .innerText =
+    applicants.filter(a =>
+        a.status === "Rejected"
     ).length;
 
     const pending =
@@ -186,81 +186,76 @@ document.getElementById("acceptedCount")
         a.status === "Pending"
     ).length;
 
-const interview =
+    const interview =
     applicants.filter(a =>
         a.status === "Interview"
     ).length;
 
-const accepted =
+    const accepted =
     applicants.filter(a =>
         a.status === "Accepted"
     ).length;
 
-const rejected =
+    const rejected =
     applicants.filter(a =>
         a.status === "Rejected"
     ).length;
 
-const ctx =
+    const ctx =
     document.getElementById("statusChart");
 
-if (statusChart) {
-    statusChart.destroy();
-}
-
-statusChart = new Chart(ctx, {
-
-    type: "pie",
-
-    data: {
-
-        labels: [
-            "Pending",
-            "Interview",
-            "Accepted",
-            "Rejected"
-        ],
-
-        datasets: [{
-
-            data: [
-                pending,
-                interview,
-                accepted,
-                rejected
-            ]
-        }]
+    if (statusChart) {
+        statusChart.destroy();
     }
-});
+
+    statusChart = new Chart(ctx, {
+
+        type: "pie",
+
+        data: {
+
+            labels: [
+                "Pending",
+                "Interview",
+                "Accepted",
+                "Rejected"
+            ],
+
+            datasets: [{
+
+                data: [
+                    pending,
+                    interview,
+                    accepted,
+                    rejected
+                ]
+            }]
+        }
+    });
 
     const applicantsList =
-        document.getElementById("applicantsList");
+    document.getElementById("applicantsList");
 
     const filter =
-        document.getElementById("statusFilter").value;
+    document.getElementById("statusFilter").value;
 
-        const jobFilter =
-document.getElementById(
-"jobFilter"
-).value;
+    const jobFilter =
+    document.getElementById("jobFilter").value;
 
-const sortFilter =
-document.getElementById(
-"sortFilter"
-).value;
+    const sortFilter =
+    document.getElementById("sortFilter").value;
 
     const search =
-        document.getElementById("searchInput")
-        .value
-        .toLowerCase();
+    document.getElementById("searchInput")
+    .value
+    .toLowerCase();
 
     applicantsList.innerHTML = "";
 
     if (sortFilter === "newest") {
+        applicants.reverse();
+    }
 
-    applicants.reverse();
-}
-    
     applicants.forEach(applicant => {
 
         if (
@@ -271,11 +266,11 @@ document.getElementById(
         }
 
         if (
-    jobFilter !== "All" &&
-    applicant.job !== jobFilter
-) {
-    return;
-}
+            jobFilter !== "All" &&
+            applicant.job !== jobFilter
+        ) {
+            return;
+        }
 
         if (
             !applicant.name.toLowerCase().includes(search) &&
@@ -287,96 +282,93 @@ document.getElementById(
 
         applicantsList.innerHTML += `
 
-            <div class="applicant-card">
+        <div class="applicant-card">
 
-                <p><strong>Name:</strong>
-                ${applicant.name}</p>
+            <p><strong>Name:</strong>
+            ${applicant.name}</p>
 
-                <p><strong>Email:</strong>
-                ${applicant.email}</p>
+            <p><strong>Email:</strong>
+            ${applicant.email}</p>
 
-                <p><strong>Job:</strong>
-                ${applicant.job}</p>
+            <p><strong>Job:</strong>
+            ${applicant.job}</p>
 
-                <p><strong>Status:</strong>
-                ${applicant.status}</p>
+            <p><strong>Status:</strong>
+            ${applicant.status}</p>
 
-                <textarea
-class="notes-input"
-id="notes-${applicant._id}"
-placeholder="Recruiter notes..."
->${applicant.notes || ""}</textarea>
+            <textarea
+            class="notes-input"
+            id="notes-${applicant._id}"
+            placeholder="Recruiter notes..."
+            >${applicant.notes || ""}</textarea>
 
-<br><br>
+            <br><br>
 
-<button onclick="
-saveNotes(
-'${applicant._id}'
-)">
-    Save Notes
-</button>
+            <button
+            class="save-btn"
+            data-id="${applicant._id}"
+            >
+                Save Notes
+            </button>
 
-<br>
+            <br><br>
 
-<input
-type="datetime-local"
-id="interview-${applicant._id}"
-value="${applicant.interviewDate || ''}"
->
+            <input
+            type="datetime-local"
+            id="interview-${applicant._id}"
+            value="${applicant.interviewDate || ''}"
+            >
 
-<button onclick="
-scheduleInterview(
-'${applicant._id}'
-)">
-    Schedule Interview
-</button>
-<a href="${applicant.cv}" target="_blank">
-                    View CV
-                    <br><br>
+            <button
+            class="schedule-btn"
+            data-id="${applicant._id}"
+            >
+                Schedule Interview
+            </button>
 
-<button onclick="
-window.location.href=
-'/applicant.html?id=${applicant._id}'
-">
-    View Applicant
-</button>
-                </a>
+            <br><br>
 
-                <br><br>
+            <a
+            href="${applicant.cv}"
+            target="_blank"
+            rel="noopener noreferrer"
+            >
+                View CV
+            </a>
 
-<button
-class="interview-btn"
-data-id="${applicant._id}"
->
-    Interview
-</button>
+            <br><br>
 
-                <button class="accept-btn"
-                onclick="
-                updateStatus(
-                '${applicant._id}',
-                'Accepted'
-                )">
-                    Accept
-                </button>
+            <button
+            class="view-btn"
+            data-id="${applicant._id}"
+            >
+                View Applicant
+            </button>
 
-                <button class="reject-btn"
-                onclick="
-                updateStatus(
-                '${applicant._id}',
-                'Rejected'
-                )">
-                    Reject
-                </button>
+            <br><br>
 
-<button
-class="delete-btn"
-data-id="${applicant._id}"
->
-    Delete
-</button>
+            <button
+            class="accept-btn"
+            data-id="${applicant._id}"
+            >
+                Accept
+            </button>
 
-            </div>
+            <button
+            class="reject-btn"
+            data-id="${applicant._id}"
+            >
+                Reject
+            </button>
+
+            <button
+            class="delete-btn"
+            data-id="${applicant._id}"
+            >
+                Delete
+            </button>
+
+        </div>
 
         `;
     });
@@ -412,9 +404,9 @@ async function updateStatus(id, status) {
 async function saveNotes(id) {
 
     const notes =
-        document.getElementById(
-            `notes-${id}`
-        ).value;
+    document.getElementById(
+        `notes-${id}`
+    ).value;
 
     await fetch(`/notes/${id}`, {
 
@@ -435,9 +427,9 @@ async function saveNotes(id) {
 async function scheduleInterview(id) {
 
     const interviewDate =
-        document.getElementById(
-            `interview-${id}`
-        ).value;
+    document.getElementById(
+        `interview-${id}`
+    ).value;
 
     await fetch(`/interview/${id}`, {
 
@@ -456,6 +448,89 @@ async function scheduleInterview(id) {
 }
 
 loadApplicants();
+
+document.getElementById(
+    "searchInput"
+).addEventListener(
+    "input",
+    loadApplicants
+);
+
+document.getElementById(
+    "statusFilter"
+).addEventListener(
+    "change",
+    loadApplicants
+);
+
+document.getElementById(
+    "jobFilter"
+).addEventListener(
+    "change",
+    loadApplicants
+);
+
+document.getElementById(
+    "sortFilter"
+).addEventListener(
+    "change",
+    loadApplicants
+);
+
+document.addEventListener("click", (e) => {
+
+    const id = e.target.dataset.id;
+
+    if (
+        e.target.classList.contains(
+            "accept-btn"
+        )
+    ) {
+        updateStatus(id, "Accepted");
+    }
+
+    if (
+        e.target.classList.contains(
+            "reject-btn"
+        )
+    ) {
+        updateStatus(id, "Rejected");
+    }
+
+    if (
+        e.target.classList.contains(
+            "schedule-btn"
+        )
+    ) {
+        scheduleInterview(id);
+    }
+
+    if (
+        e.target.classList.contains(
+            "save-btn"
+        )
+    ) {
+        saveNotes(id);
+    }
+
+    if (
+        e.target.classList.contains(
+            "view-btn"
+        )
+    ) {
+        window.location.href =
+        `/applicant.html?id=${id}`;
+    }
+
+    if (
+        e.target.classList.contains(
+            "delete-btn"
+        )
+    ) {
+        deleteApplicant(id);
+    }
+
+});
 
 </script>
 
