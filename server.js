@@ -16,9 +16,9 @@ nodemailer.createTransport({
 
     host: "smtp.gmail.com",
 
-    port: 465,
+    port: 587,
 
-    secure: true,
+    secure: false,
 
     auth: {
 
@@ -27,6 +27,11 @@ nodemailer.createTransport({
 
         pass:
         process.env.EMAIL_PASS
+    },
+
+    tls: {
+
+        rejectUnauthorized: false
     }
 });
 
