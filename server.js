@@ -479,20 +479,22 @@ app.put("/notes/:id", isAdmin, async (req, res) => {
 
 app.put("/interview/:id", isAdmin, async (req, res) => {
 
-    const applicant =
-        await Applicant.findByIdAndUpdate(
+const applicant =
+    await Applicant.findByIdAndUpdate(
 
-            req.params.id,
+        req.params.id,
 
-            {
-                interviewDate:
-                    req.body.interviewDate
-            },
+        {
+            interviewDate:
+                req.body.interviewDate,
 
-            {
-                new: true
-            }
-        );
+            status: "Interview"
+        },
+
+        {
+            new: true
+        }
+    );
 
     await transporter.sendMail({
 
