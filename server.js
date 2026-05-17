@@ -388,9 +388,11 @@ app.put("/applicants/:id", isAdmin, async (req, res) => {
             }
         );
 
+    try {
+
     await transporter.sendMail({
 
-        from: "keenes656@gmail.com",
+        from: process.env.EMAIL_USER,
 
         to: applicant.email,
 
@@ -504,7 +506,7 @@ const applicant =
 
     await transporter.sendMail({
 
-        from: process.env.BREVO_USER,
+        from: process.env.EMAIL_USER,
 
         to: applicant.email,
 
