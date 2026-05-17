@@ -466,6 +466,11 @@ app.put("/applicants/:id", isAdmin, async (req, res) => {
         `
     });
 
+} catch (emailError) {
+
+    console.log(emailError);
+}
+
     res.send("Status updated");
 });
 
