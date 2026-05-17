@@ -300,10 +300,10 @@ app.post(
     await transporter.sendMail({
 
         from:
-        process.env.EMAIL_USER,
+        process.env.BREVO_USER,
 
         to:
-        process.env.EMAIL_USER,
+        process.env.BREVO_USER,
 
         subject:
         "New Job Application",
@@ -504,7 +504,7 @@ const applicant =
 
     await transporter.sendMail({
 
-        from: process.env.EMAIL_USER,
+        from: process.env.BREVO_USER,
 
         to: applicant.email,
 
