@@ -11,22 +11,17 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
-const transporter =
-nodemailer.createTransport({
-
+const transporter = nodemailer.createTransport({
+    
     host: "smtp-relay.brevo.com",
-
+    
     port: 587,
-
+    
     secure: false,
-
+    
     auth: {
-
-        user:
-        process.env.BREVO_USER,
-
-        pass:
-        process.env.BREVO_PASS
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS
     }
 });
 
@@ -145,9 +140,8 @@ app.use(session({
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use("/uploads", express.static("uploads"));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
@@ -295,18 +289,15 @@ app.post(
 
             await applicant.save();
 
-            try {
+    try {
 
     await transporter.sendMail({
 
         from:
         process.env.BREVO_USER,
 
-        to:
-        process.env.BREVO_USER,
-
-        subject:
-        "New Job Application",
+        to: req.body.email,
+        subject: "New Job Application",
 
         html: `
 
@@ -392,7 +383,7 @@ app.put("/applicants/:id", isAdmin, async (req, res) => {
 
     await transporter.sendMail({
 
-        from: process.env.EMAIL_USER,
+        from: process.env.BREVO_USER,
 
         to: applicant.email,
 
@@ -472,6 +463,7 @@ app.put("/applicants/:id", isAdmin, async (req, res) => {
 }
 
     res.send("Status updated");
+
 });
 
 app.put("/notes/:id", isAdmin, async (req, res) => {
@@ -511,8 +503,7 @@ const applicant =
 
     await transporter.sendMail({
 
-        from: process.env.EMAIL_USER,
-
+        from: process.env.BREVO_USER,
         to: applicant.email,
 
         subject: "Interview Scheduled",
@@ -565,18 +556,12 @@ const applicant =
         "Interview email sent"
     );
 
-    res.send(
-        "Interview scheduled"
-    );
-
 } catch (error) {
 
     console.log(error);
-
-    res.status(500).send(
-        "Email failed"
-    );
 }
+
+res.send("Interview scheduled");
 
 });
 
